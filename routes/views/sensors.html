@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/network-wired-solid.svg">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/index.css">
+    <script src="/create-sensor-modal.js"></script>
+    <script src="/create-sensor.js"></script>
+    <script src="/modify-sensor.js"></script>
+    <script src="/create-cards.js"></script>
+    <script src="/modify-sensor-status.js"></script>
+    <script src="/modify-start-all-sensors.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
+    integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M" crossorigin="anonymous">
+    </script>  
+    <title>DataSynth - MQTT</title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <h2>
+          <span class="las la-network-wired"></span>eMQTT
+        </h2>
+      </div>
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="/">
+              <span class="las la-home"></span>
+              <span>Home</span>
+            </a>
+          </li>
+          <li>
+            <a href="" class="active">
+              <span class="las la-tachometer-alt"></span>
+              <span>My Sensors</span>
+            </a>
+          </li>
+          <li>
+            <a href="/executions">
+              <span class="las la-broadcast-tower"></span>
+              <span>My Execution</span>
+            </a>
+          </li>
+          <li>
+            <a href="http://localhost/impala/panelcontrol/">
+              <span class="las la-database"></span>
+              <span>Data Viewer</span>
+            </a>
+          </li>
+          <li>
+            <a href="/myprofile" >
+              <span class="las la-user-tie"></span>
+              <span>My Profile</span>
+            </a>
+          </li>          
+        </ul>
+      </div>
+    </div>
+    <div class="main-content">
+      <header>
+        <h2>
+          <label for="">
+            <span class="las la-bars"></span>
+          </label> My sensors
+        </h2>
+        <div class="user-wrapper">
+          <div id="identiconPlaceholder">
+          </div>
+          <div>
+            <h4 id="uidname">Username</h4>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div id="cards" class="cards"></div>
+        <div class="contenedor-f3">
+          <button class="botonF3 las la-skull-crossbones" id="startAllSensors" type="button">        
+          </button>
+        </div> 
+        <div class="contenedor-f2">
+          <button class="botonF2">
+            <span data-bs-toggle="modal" data-bs-target="#createSensorModal" id="modalFunction">+</span>
+          </button>
+        </div>  
+        <div class="contenedor-f1">
+          <button class="botonF1 las la-heartbeat" id="startAllSensors" type="button">        
+          </button>
+        </div> 
+      </main>
+    </div>
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 id="header_temperature" class="modal-title w-100 text-center">Modal Heading</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">MQTT:</label>
+                <input type="text" class="form-control" id="name_1">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">IP Address:</label>
+                <input type="text" class="form-control" id="ip_1">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Voltage (v):</label>
+                <select id="voltage_1" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                  <option value="1">3.3</option>
+                  <option value="2">5.0</option>
+                  <option value="3">12</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">ADC(Bits):</label>
+                <select id="adc_1" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                  <option value="1">8</option>
+                  <option value="2">10</option>
+                  <option value="3">12</option>
+                  <option value="4">16</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Randomnes:</label>
+                <select id="randomness_1" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                  <option value="1">Low</option>
+                  <option value="2">Medium</option>
+                  <option value="3">High</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="range_1" class="form-label">Loop: <span id="output_1">0</span>(s) </label>
+                <input type="range" class="form-range" min="1" max="60" step="1" id="range_1">
+              </div>
+            </form>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="btn-submit-1">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- The Modal -->
+    <div class="modal fade" id="createSensorModal">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 id="header_temperature" class="modal-title w-100 text-center">Create sensor</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="create-name" class="col-form-label">Name:</label>
+                <input type="text" class="form-control" id="create-name">
+              </div>
+              <div class="form-group">
+                <label for="create-topic" class="col-form-label">Topic:</label>
+                <input type="text" class="form-control" id="create-topic">
+              </div>
+              <div class="form-group">
+                <label for="ip_2" class="col-form-label">IP Address:</label>
+                <input type="text" class="form-control" id="ip_2">
+              </div>
+              <div class="form-group">
+                <label for="create-type" class="col-form-label">Sensor type:</label>
+                <select id="create-type" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                  <optgroup label="Temperature">
+                    <option value="A">DHT11</option>
+                    <option value="A">DHT22</option>
+                    <option value="A">LM35</option>
+                  </optgroup>
+                  <optgroup label="Magnetic">
+                    <option value="B">S441R</option>
+                    <option value="B">A3144</option>
+                  </optgroup>
+                  <optgroup label="Pressure">
+                    <option value="B">MPS20N0040D</option>
+                    <option value="B">RPS40</option>
+                  </optgroup>
+                  <optgroup label="Ultrasonic">
+                    <option value="C">LIDARV3</option>
+                    <option value="C">HC-SR04</option>
+                  </optgroup>
+                  <optgroup label="Humidity">
+                    <option value="D">DHTxx</option>
+                    <option value="D">AM2305</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="randomness_2" class="col-form-label">Randomnes:</label>
+                <select id="randomness_2" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                  <option value="1">Low</option>
+                  <option value="2">Medium</option>
+                  <option value="3">High</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="range_2" class="form-label">Frequency: <span id="output_2">0</span>(s) </label>
+                <input type="range" class="form-range" min="1" max="60" step="1" id="range_2">
+              </div>
+            </form>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-success btn-lg btn-block text-nowrap" id="btn-create-sensor">Save changes</button>
+            <button type="button" class="btn btn-secondary btn-lg btn-block ml-1" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>  
+    
+    
+
+
+<!-- The Modal -->
+<div class="modal fade" id="modal-status-sensor">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 id="header_status" class="modal-title w-100 text-center"></h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <div class="form-check form-switch" id="switch_state_modal">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+              <label class="form-check-label" for="flexSwitchCheckChecked">Stop/Start</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-success  text-nowrap" id="btn-sensor-status">Save changes</button>
+        <button type="button" class="btn btn-secondary btn-block ml-1" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>  
+
+  </body>
+</html>
